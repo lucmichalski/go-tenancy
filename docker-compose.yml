@@ -1,0 +1,42 @@
+---
+version: '3.7'
+services:
+
+  app:
+    image: snowlyg/go-tenancy
+    container_name: go-tenancy_app
+    ports:
+    - 7000:7000
+    volumes:
+    - app-data:/opt/go-tenancy/bin/public
+    networks:
+    - internal
+    - web
+    restart: unless-stopped
+
+  mysql:
+    image: mysql:5.7
+    container_name: ${NAMESPACE}-db
+    ports:
+    - 3306:3306
+    volumes:
+    - ./.docker/mysql:/etc/mysql/conf.d
+    - db-data:/var/lib/mysql
+    environment:
+      MYSQL_DATABASE: go-tenancy
+      MYSQL_PASSWORD: supercow
+      MYSQL_ROOT_PASSWORD: 'megacow'
+      MYSQL_USER: snowlyg
+    networks:
+    - internal
+    # - web # for tests purpose, if you want to connect to a client like sequel pro
+    restart: unless-stopped
+
+networks:
+  internal:
+  web:
+    external: true
+
+volumes:
+  app-data:
+  db-data:
