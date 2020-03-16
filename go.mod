@@ -1,4 +1,4 @@
-module go-tenancy
+module github.com/snowlyg/go-tenancy
 
 go 1.13
 
